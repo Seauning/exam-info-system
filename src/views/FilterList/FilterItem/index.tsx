@@ -1,19 +1,13 @@
 import { View } from "@tarojs/components"
 import classnames from 'classnames'
-import { useEffect, useState } from "react"
 import css from './index.module.scss'
 
-export const FilterItem = ({ name, onActivatedChange, className }: {
+export const FilterItem = ({ name, onClick, className, activated }: {
   name: string;
-  onActivatedChange: (activated: boolean) => void;
+  onClick: (activated: boolean) => void;
   className: string;
+  activated: boolean;
 }) => {
-  const [activated, setActivated] = useState(false);
-
-  useEffect(() => {
-    onActivatedChange(activated);
-  }, [activated, onActivatedChange])
-
   return <View
     className={
       classnames({
@@ -22,7 +16,7 @@ export const FilterItem = ({ name, onActivatedChange, className }: {
         [className]: true,
       })
     }
-    onClick={() => setActivated(!activated)}
+    onClick={() => onClick(!activated)}
   >
       {name}
   </View>

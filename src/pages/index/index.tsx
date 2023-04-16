@@ -1,64 +1,111 @@
 import { Search } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import { useEffect, useState } from 'react'
+import { QuerySystem } from '../../components/QuerySystem'
+import { Remind } from '../../components/Remind'
 import { FilterList, FilterListProps, } from '../../views/FilterList'
-import { FilterTable } from '../../views/FilterTable'
+import { FilterTable, FilterTableProps } from '../../views/FilterTable'
 import './index.scss'
+
+const school = {
+  no: '1231',
+  major: '测试',
+  enrollmentUniversitie: '',
+  educationalInstitution: '',
+  lianpeiSchool: '测试',
+  enrollmentPlan: '测试',
+  normalPlan: '测试',
+  povertyAlleviationFamiliy: '测试',
+  awardStudent: '测试',
+  futureCraftsman: '测试',
+  retiredSoldiers: '测试',
+  exam300: '测试',
+  exam150: '测试',
+  tuition: '测试',
+  provincialControlLine: '测试',
+  admissionScoreLineForOrdinaryCandidate: '测试',
+  admissionScorePovertyAlleviationFamilies: '测试',
+  admissionScoreLineAwardStudents: '测试',
+  provincialControlLineBranchOrdinaryCandidate: '测试',
+  vacancyPlanRegularCandidate: '测试',
+  vacancyPlanPovertyAlleviationFamiliy: '测试',
+  vacancyProgramAwardStudents: '测试',
+};
+
+const getSpecialtyList = (query: string) => {
+  return [{
+    category: `(05)理工类${query}`,
+    specialtys: [
+      {
+        name: '计算机科学与技术1',
+        no: '1231'
+      },
+      {
+        name: '软件工程',
+        no: '1232'
+      },
+      {
+        name: '通信工程',
+        no: '1234'
+      },
+      {
+        name: '大数据',
+        no: '1235'
+      }
+    ]
+  },
+    {
+      category: `(06)理工类${query}`,
+      specialtys: [
+        {
+          name: '计算机科学与技术1',
+          no: '1236'
+        },
+        {
+          name: '计算机科学与技术2',
+          no: '1237'
+        },
+        {
+          name: '计算机科学与技术3',
+          no: '1238'
+        },
+        {
+          name: '计算机科学与技术4',
+          no: '1239'
+        }
+      ]
+    }
+  ]
+}
+
+const getSchools = (query: string, list?: FilterListProps['list']) => {
+  const specStr = list?.reduce((pre, item) => pre + item.specialtys.filter(spec => spec.activated).map(v => v.name).join('_'), '')
+  console.log('!!', specStr);
+
+  const data: FilterTableProps['list'] = new Array(10).fill(school).map((item, index) => ({...item, no: index, major: `测试${query}${specStr}`}))
+
+  return data;
+}
 
 export default function() {
   const [searchValue, setSearchValue] = useState('');
   const [specialtyList, setSpecialtyList] = useState<FilterListProps['list']>([]);
+  const [schools, setSchools] = useState<FilterTableProps['list']>([])
 
   useEffect(() => {
     if(!searchValue)  {
       setSpecialtyList([]);
+      setSchools([]);
       return;
     }
 
-    setSpecialtyList([{
-      category: '(05)理工类',
-      specialtys: [
-        {
-          name: '计算机科学与技术1',
-          no: '1231'
-        },
-        {
-          name: '软件工程',
-          no: '1232'
-        },
-        {
-          name: '通信工程',
-          no: '1234'
-        },
-        {
-          name: '大数据',
-          no: '1235'
-        }
-      ]
-    },
-      {
-        category: '(06)理工类',
-        specialtys: [
-          {
-            name: '计算机科学与技术1',
-            no: '1231'
-          },
-          {
-            name: '计算机科学与技术2',
-            no: '1232'
-          },
-          {
-            name: '计算机科学与技术3',
-            no: '1234'
-          },
-          {
-            name: '计算机科学与技术4',
-            no: '1235'
-          }
-        ]
-      }
-    ])
+    setSpecialtyList(getSpecialtyList(searchValue))
+    setSchools(getSchools(searchValue, []))
   }, [searchValue])
+
+  const handFilterListChange: FilterListProps['onFilterListChange'] = (list) => {
+    setSchools(getSchools(searchValue, list))
+  }
 
   return (
     <View className='index'>
@@ -68,130 +115,15 @@ export default function() {
         setSearchValue((e.target as any)?.value || '')
       }}
       />
-      <FilterList list={specialtyList} />
-      <FilterTable list={[
-          {
-            no: '1231',
-            major: '测试',
-            enrollmentUniversitie: '测试',
-            educationalInstitution: '测试',
-            lianpeiSchool: '测试',
-            enrollmentPlan: '测试',
-            normalPlan: '测试',
-            povertyAlleviationFamiliy: '测试',
-            awardStudent: '测试',
-            futureCraftsman: '测试',
-            retiredSoldiers: '测试',
-            exam300: '测试',
-            exam150: '测试',
-            tuition: '测试',
-            provincialControlLine: '测试',
-            admissionScoreLineForOrdinaryCandidate: '测试',
-            admissionScorePovertyAlleviationFamilies: '测试',
-            admissionScoreLineAwardStudents: '测试',
-            provincialControlLineBranchOrdinaryCandidate: '测试',
-            vacancyPlanRegularCandidate: '测试',
-            vacancyPlanPovertyAlleviationFamiliy: '测试',
-            vacancyProgramAwardStudents: '测试',
-          },
-          {
-            no: '1232',
-            major: '测试1',
-            enrollmentUniversitie: '测试1',
-            educationalInstitution: '测试1',
-            lianpeiSchool: '测试1',
-            enrollmentPlan: '测试1',
-            normalPlan: '测试1',
-            povertyAlleviationFamiliy: '测试1',
-            awardStudent: '测试1',
-            futureCraftsman: '测试1',
-            retiredSoldiers: '测试1',
-            exam300: '测试1',
-            exam150: '测试1',
-            tuition: '测试1',
-            provincialControlLine: '测试1',
-            admissionScoreLineForOrdinaryCandidate: '测试1',
-            admissionScorePovertyAlleviationFamilies: '测试1',
-            admissionScoreLineAwardStudents: '测试1',
-            provincialControlLineBranchOrdinaryCandidate: '测试1',
-            vacancyPlanRegularCandidate: '测试1',
-            vacancyPlanPovertyAlleviationFamiliy: '测试1',
-            vacancyProgramAwardStudents: '测试1',
-          },
-          {
-            no: '1233',
-            major: '测试1',
-            enrollmentUniversitie: '测试1',
-            educationalInstitution: '测试1',
-            lianpeiSchool: '测试1',
-            enrollmentPlan: '测试1',
-            normalPlan: '测试1',
-            povertyAlleviationFamiliy: '测试1',
-            awardStudent: '测试1',
-            futureCraftsman: '测试1',
-            retiredSoldiers: '测试1',
-            exam300: '测试1',
-            exam150: '测试1',
-            tuition: '测试1',
-            provincialControlLine: '测试1',
-            admissionScoreLineForOrdinaryCandidate: '测试1',
-            admissionScorePovertyAlleviationFamilies: '测试1',
-            admissionScoreLineAwardStudents: '测试1',
-            provincialControlLineBranchOrdinaryCandidate: '测试1',
-            vacancyPlanRegularCandidate: '测试1',
-            vacancyPlanPovertyAlleviationFamiliy: '测试1',
-            vacancyProgramAwardStudents: '测试1',
-          },
-          {
-            no: '1234',
-            major: '测试1',
-            enrollmentUniversitie: '测试1',
-            educationalInstitution: '测试1',
-            lianpeiSchool: '测试1',
-            enrollmentPlan: '测试1',
-            normalPlan: '测试1',
-            povertyAlleviationFamiliy: '测试1',
-            awardStudent: '测试1',
-            futureCraftsman: '测试1',
-            retiredSoldiers: '测试1',
-            exam300: '测试1',
-            exam150: '测试1',
-            tuition: '测试1',
-            provincialControlLine: '测试1',
-            admissionScoreLineForOrdinaryCandidate: '测试1',
-            admissionScorePovertyAlleviationFamilies: '测试1',
-            admissionScoreLineAwardStudents: '测试1',
-            provincialControlLineBranchOrdinaryCandidate: '测试1',
-            vacancyPlanRegularCandidate: '测试1',
-            vacancyPlanPovertyAlleviationFamiliy: '测试1',
-            vacancyProgramAwardStudents: '测试1',
-          },
-          {
-            no: '1235',
-            major: '测试1',
-            enrollmentUniversitie: '测试1',
-            educationalInstitution: '测试1',
-            lianpeiSchool: '测试1',
-            enrollmentPlan: '测试1',
-            normalPlan: '测试1',
-            povertyAlleviationFamiliy: '测试1',
-            awardStudent: '测试1',
-            futureCraftsman: '测试1',
-            retiredSoldiers: '测试1',
-            exam300: '测试1',
-            exam150: '测试1',
-            tuition: '测试1',
-            provincialControlLine: '测试1',
-            admissionScoreLineForOrdinaryCandidate: '测试1',
-            admissionScorePovertyAlleviationFamilies: '测试1',
-            admissionScoreLineAwardStudents: '测试1',
-            provincialControlLineBranchOrdinaryCandidate: '测试1',
-            vacancyPlanRegularCandidate: '测试1',
-            vacancyPlanPovertyAlleviationFamiliy: '测试1',
-            vacancyProgramAwardStudents: '测试1',
-          },
-        ]}
-      />
+      {
+        searchValue ? <>
+           <FilterList list={specialtyList} onFilterListChange={handFilterListChange} />
+           <FilterTable list={schools} />
+        </> : <View className='info'>
+          <Remind />
+          <QuerySystem />
+        </View>
+      }
     </View>
   )
 }
