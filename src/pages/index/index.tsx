@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react'
 import { QuerySystem } from '../../components/QuerySystem'
 import { Remind } from '../../components/Remind'
 import { FilterList, FilterListProps, } from '../../views/FilterList'
-import { FilterTable, FilterTableProps } from '../../views/FilterTable'
+import { FilterTable, FilterTableProps, SchoolItem } from '../../views/FilterTable'
 import './index.scss'
 
-const school = {
+const school: SchoolItem = {
   no: '1231',
   major: '测试',
   enrollmentUniversitie: '',

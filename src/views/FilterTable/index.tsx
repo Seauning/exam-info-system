@@ -4,7 +4,7 @@ import { Title } from '../../components/Title';
 import css from './index.module.scss'
 import { useColumns } from './useColumns'
 
-export interface Item {
+export interface SchoolItem {
   no: string;
   major?: string;
   enrollmentUniversitie?: string;
@@ -30,7 +30,7 @@ export interface Item {
 }
 
 export type FilterTableProps = {
-  list: Item[]
+  list: SchoolItem[]
 }
 
 export const FilterTable = ({
