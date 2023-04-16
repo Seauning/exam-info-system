@@ -3,16 +3,33 @@ import { View } from '@tarojs/components';
 import css from './index.module.scss'
 import { useColumns } from './useColumns'
 
-export interface School {
-  name: string;
-  age: number,
-  account: number,
-  address: string,
-  hobby: string,
+export interface Item {
+  no: string;
+  major: string;
+  enrollmentUniversitie: string;
+  educationalInstitution: string;
+  lianpeiSchool: string;
+  enrollmentPlan: string;
+  normalPlan: string;
+  povertyAlleviationFamiliy: string;
+  awardStudent: string;
+  futureCraftsman: string;
+  retiredSoldiers: string;
+  exam300: string;
+  exam150: string;
+  tuition: string;
+  provincialControlLine: string;
+  admissionScoreLineForOrdinaryCandidate: string;
+  admissionScorePovertyAlleviationFamilies: string;
+  admissionScoreLineAwardStudents: string;
+  provincialControlLineBranchOrdinaryCandidate: string;
+  vacancyPlanRegularCandidate: string;
+  vacancyPlanPovertyAlleviationFamiliy: string;
+  vacancyProgramAwardStudents: string;
 }
 
 export type FilterTableProps = {
-  list: School[]
+  list: Item[]
 }
 
 export const FilterTable = ({
@@ -27,7 +44,7 @@ export const FilterTable = ({
       className={css.table}
       columns={columns}
       dataSource={list}
-      rowKey='name'
+      rowKey='no'
       scroll={{x: true}}
       titleStyle={{
         backgroundColor: 'rgb(72, 3, 119)',
