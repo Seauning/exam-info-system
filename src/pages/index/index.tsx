@@ -32,7 +32,9 @@ const school = {
   vacancyProgramAwardStudents: '测试',
 };
 
-const getSpecialtyList = (query: string) => {
+type GetSpecialtyList = (query: string) => FilterListProps['list']
+
+const getSpecialtyList: GetSpecialtyList = (query) => {
   return [{
     category: `(05)理工类${query}`,
     specialtys: [
@@ -78,12 +80,11 @@ const getSpecialtyList = (query: string) => {
   ]
 }
 
-const getSchools = (query: string, list?: FilterListProps['list']) => {
+type GetSchools = (query: string, list?: FilterListProps['list']) => FilterTableProps['list']
+
+const getSchools: GetSchools = (query, list) => {
   const specStr = list?.reduce((pre, item) => pre + item.specialtys.filter(spec => spec.activated).map(v => v.name).join('_'), '')
-  console.log('!!', specStr);
-
   const data: FilterTableProps['list'] = new Array(10).fill(school).map((item, index) => ({...item, no: index, major: `测试${query}${specStr}`}))
-
   return data;
 }
 
