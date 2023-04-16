@@ -1,5 +1,5 @@
-import { Divider } from "@antmjs/vantui";
-import { View } from "@tarojs/components"
+import { Divider, Icon } from "@antmjs/vantui";
+import { Text, View } from "@tarojs/components"
 import { useEffect, useState } from "react";
 import { Title } from "../../components/Title";
 import { FilterItem } from "./FilterItem";
@@ -13,7 +13,7 @@ export type Specialty = {
 }
 
 export type FilterListProps = {
-  list: {category: string; specialtys: Specialty[]}[];
+  list: {category: string; specialtys: Specialty[];}[];
   onFilterListChange?: (list: FilterListProps['list']) => void;
 }
 
@@ -52,6 +52,23 @@ export const FilterList = ({ list, onFilterListChange }: FilterListProps) => {
     setSpecialtyList([...specialtyList]);
   }
 
+  const handleSelectAll = (category: string, activated: boolean) => {
+    for(let i = 0; i < specialtyList.length; i++) {
+      const item = specialtyList[i];
+      if(item.category === category) {
+        item.specialtys.forEach(spec => spec.activated = activated)
+      }
+    }
+
+    if(activated) {
+      specialtyList.filter(item => item.category !== category)
+      .forEach(item => item.specialtys.forEach(spec => spec.activated = false))
+    }
+
+    onFilterListChange?.(specialtyList);
+    setSpecialtyList([...specialtyList]);
+  }
+
   if(!specialtyList?.length)  return <></>
 
   return <View className={css.filter_list}>
@@ -59,13 +76,33 @@ export const FilterList = ({ list, onFilterListChange }: FilterListProps) => {
     <View className='comment'>点击专业卡查看院校招生计划</View>
     <View>
       {
-        specialtyList.map((item) => {
-          return <View key={item.category}>
-            <View className='category'>{item.category}</View>
+        specialtyList.map(({specialtys, category}) => {
+          const isAllSelected = specialtys.every(spec => spec.activated);
+          return <View key={category}>
+            <View className='category'>
+              <Text>{category}</Text>
+              {
+
+              isAllSelected ?
+                <View
+                  className='all_selected'
+                  onClick={() => handleSelectAll(category, false)}
+                >
+                  <Icon name='checked' className='icon' />
+                  取消全选
+                </View>
+               : <Text
+                   className='all_selected'
+                   onClick={() => handleSelectAll(category, true)}
+               >
+                    全选
+                 </Text>
+              }
+            </View>
             <Divider />
             <View className='specialtys'>
               {
-                item.specialtys.map(({ name, activated = false, no }) => {
+                specialtys.map(({ name, activated = false, no }) => {
                   return <FilterItem
                     className='specialty'
                     activated={activated}

@@ -101,7 +101,6 @@ export default function() {
     }
 
     setSpecialtyList(getSpecialtyList(searchValue))
-    setSchools(getSchools(searchValue, []))
   }, [searchValue])
 
   const handFilterListChange: FilterListProps['onFilterListChange'] = (list) => {

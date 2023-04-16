@@ -7,8 +7,17 @@
       font-size: 14px;
     }
     .category {
-      padding-left: 20px;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 20px;
+      .all_selected {
+        color: rgb(72, 3, 119);
+        .icon {
+          font-size: 18px;
+        }
+      }
     }
+
     .specialtys{
       display: flex;
       justify-content: flex-start;
