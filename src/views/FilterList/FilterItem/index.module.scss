@@ -1,0 +1,13 @@
+.default {
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 25px;
+  background-color: #e5e4e4;
+  color: #000;
+  font-size: 16px;
+}
+
+.activated {
+  background-color: rgb(72, 3, 119);
+  color: #fff;
+}
