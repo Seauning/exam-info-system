@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Title } from "../../components/Title";
 import { FilterItem } from "../FilterList/FilterItem";
 
-import css from './FilterList/index.module.scss'
+import css from '../FilterList/index.module.scss'
 
 export type JoinSchoolItem = {
   name: string;
