@@ -42,7 +42,6 @@ export const FilterList = ({ list, onFilterListChange }: FilterListProps) => {
       for(let item2 of item.specialtys) {
         if(item2.no === no) {
           item2.activated = activated;
-          specialtyList.filter((_, index) => index !== i).forEach(v => v.specialtys.forEach(v2 => v2.activated = false))
           break;
         }
       }
@@ -56,13 +55,9 @@ export const FilterList = ({ list, onFilterListChange }: FilterListProps) => {
     for(let i = 0; i < specialtyList.length; i++) {
       const item = specialtyList[i];
       if(item.category === category) {
-        item.specialtys.forEach(spec => spec.activated = activated)
+        item.specialtys.forEach(spec => spec.activated = activated);
+        break;
       }
-    }
-
-    if(activated) {
-      specialtyList.filter(item => item.category !== category)
-      .forEach(item => item.specialtys.forEach(spec => spec.activated = false))
     }
 
     onFilterListChange?.(specialtyList);

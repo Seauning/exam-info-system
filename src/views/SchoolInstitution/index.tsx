@@ -34,8 +34,6 @@ export const SchoolInstitution = ({ list, onFilterListChange }: SchoolInstitutio
       const item = schoolInstitutionList[i];
       if(item.name === name) {
         item.activated = activated;
-      } else {
-        item.activated = false
       }
     }
 
