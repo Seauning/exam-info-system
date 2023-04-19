@@ -1,0 +1,40 @@
+.select {
+  position: relative;
+  :global {
+    .search {
+      margin: 0 20px;
+      border-radius: 50px;
+      border: 1px solid rgb(72, 3, 119);
+    }
+    .search-content {
+      position: absolute;
+      left: 50%;
+      overflow-y: scroll;
+      width: 250px;
+      max-height: 200px;
+      background-color: #fff;
+      border: 1px solid rgb(72, 3, 119);
+      border-top: 0;
+      border-radius: 0 0 10px 10px;
+      z-index: 100;
+      transform: translateX(-50%);
+      .loading {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        .van-loading__spinner {
+          width: 30px;
+          height: 30px;
+        }
+      }
+      .item {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid #999;
+      }
+    }
+  }
+}
