@@ -1,4 +1,5 @@
 import { request } from "@tarojs/taro";
+import { SchoolItem } from './../views/FilterTable/index';
 
 const a = 'http://101.200.222.26:7990';
 
@@ -10,15 +11,15 @@ export const getSpecNameList = (query: string) => {
 }
 
 export const getSpecList = (name) => {
-  return request<{bidCode: string; bigName: string; bkLearn: string}[]>({
+  return request<{title: string; arr: string[];}[]>({
     method: 'GET',
     url: `${a}/info/query-bk-list/${name}`,
   })
 }
 
 export const getAllSpecInfoList = (year, name) => {
-  return request({
-    method: 'POST',
+  return request<SchoolItem[]>({
+    method: 'GET',
     url: `${a}/info/query-allinfo-list/${year}/${name}`
   })
 }
