@@ -8,7 +8,6 @@ import css from './index.module.scss'
 
 export type Specialty = {
   name: string;
-  no: string;
   activated?: boolean;
 }
 
@@ -36,11 +35,11 @@ export const FilterList = ({ list, onFilterListChange }: FilterListProps) => {
     setSpecialtyList(newList);
   }, [list])
 
-  const handleActivatedChange = (no: string, activated: boolean) => {
+  const handleActivatedChange = (name: string, activated: boolean) => {
     for(let i = 0; i < specialtyList.length; i++) {
       const item = specialtyList[i];
       for(let item2 of item.specialtys) {
-        if(item2.no === no) {
+        if(item2.name === name) {
           item2.activated = activated;
           break;
         }
@@ -97,12 +96,12 @@ export const FilterList = ({ list, onFilterListChange }: FilterListProps) => {
             <Divider />
             <View className='specialtys'>
               {
-                specialtys.map(({ name, activated = false, no }) => {
+                specialtys.map(({ name, activated = false }) => {
                   return <FilterItem
                     className='specialty'
                     activated={activated}
-                    key={no} name={name} onClick={(payload) => {
-                      handleActivatedChange(no, payload);
+                    key={name} name={name} onClick={(payload) => {
+                      handleActivatedChange(name, payload);
                     }}
                   />
                 })
