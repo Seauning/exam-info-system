@@ -11,11 +11,12 @@ export type SchoolInstitutionItem = {
 }
 
 export type SchoolInstitutionProps = {
+  defaultAllSelect?: boolean;
   list: SchoolInstitutionItem[];
   onFilterListChange?: (list: SchoolInstitutionProps['list']) => void;
 }
 
-export const SchoolInstitution = ({ list, onFilterListChange }: SchoolInstitutionProps) => {
+export const SchoolInstitution = ({ defaultAllSelect = false, list, onFilterListChange }: SchoolInstitutionProps) => {
 
   const [schoolInstitutionList, setSchoolInstitutionList] = useState<SchoolInstitutionProps['list']>([]);
 
@@ -23,7 +24,7 @@ export const SchoolInstitution = ({ list, onFilterListChange }: SchoolInstitutio
     const newList = list.map(item => {
       return {
         ...item,
-        activated: false
+        activated: defaultAllSelect
       }
     })
     setSchoolInstitutionList(newList);

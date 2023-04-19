@@ -12,11 +12,14 @@ export type Specialty = {
 }
 
 export type FilterListProps = {
+  defaultAllSelect?: boolean;
   list: {category: string; specialtys: Specialty[];}[];
   onFilterListChange?: (list: FilterListProps['list']) => void;
 }
 
-export const FilterList = ({ list, onFilterListChange }: FilterListProps) => {
+export const FilterList = ({
+  defaultAllSelect = false,
+  list, onFilterListChange }: FilterListProps) => {
 
   const [specialtyList, setSpecialtyList] = useState<FilterListProps['list']>([]);
 
@@ -27,7 +30,7 @@ export const FilterList = ({ list, onFilterListChange }: FilterListProps) => {
         specialtys: item.specialtys.map(specialty => {
           return {
             ...specialty,
-            activated: false
+            activated: defaultAllSelect
           }
         })
       }

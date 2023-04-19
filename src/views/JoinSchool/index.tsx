@@ -11,11 +11,14 @@ export type JoinSchoolItem = {
 }
 
 export type JoinSchoolProps = {
+  defaultAllSelect?: boolean;
   list: JoinSchoolItem[];
   onFilterListChange?: (list: JoinSchoolProps['list']) => void;
 }
 
-export const JoinSchool = ({ list, onFilterListChange }: JoinSchoolProps) => {
+export const JoinSchool = ({
+  defaultAllSelect = false,
+  list, onFilterListChange }: JoinSchoolProps) => {
 
 
   const [joinSchoolList, setJoinSchoolList] = useState<JoinSchoolProps['list']>([]);
@@ -24,7 +27,7 @@ export const JoinSchool = ({ list, onFilterListChange }: JoinSchoolProps) => {
     const newList = list.map(item => {
       return {
         ...item,
-        activated: false
+        activated: defaultAllSelect
       }
     })
     setJoinSchoolList(newList);
