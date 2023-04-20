@@ -11,6 +11,7 @@ import { SchoolInstitutionItem, SchoolInstitution, SchoolInstitutionProps } from
 import { getAllSpecInfoList, getSpecList, getSpecNameList } from '../../api'
 import { JoinSchool, JoinSchoolItem, JoinSchoolProps } from '../../views/JoinSchool'
 import { Select, SelectProps } from '../../components/Select'
+import { FilterBar, FilterBarProps, YEARS } from '../../views/FilterBar'
 
 type GetSpecialtyList = (query: string) => Promise<FilterListProps['list']>
 
@@ -58,6 +59,7 @@ export default function() {
   const [specialtyList, setSpecialtyList] = useState<FilterListProps['list']>([]);
 
   const [tableDataLoading, setTableDataLoading] = useState(false)
+  const [year, setYear] = useState(YEARS[0])
 
   useEffect(() => {
     if(!searchValue)  {
@@ -72,7 +74,7 @@ export default function() {
       setSpecialtyList(data);
       try {
         setTableDataLoading(true)
-        const {data: newSchools = []} = await getAllSpecInfoList(22, searchValue);
+        const {data: newSchools = []} = await getAllSpecInfoList(year, searchValue);
         setSchools(newSchools)
         setVisibleSchools(newSchools)
       }catch(e) {
@@ -86,7 +88,7 @@ export default function() {
       }
     })()
 
-  }, [searchValue])
+  }, [searchValue, year])
 
   const [schoolInstitutions, setSchoolInstitutions] = useState<SchoolInstitutionItem[]>([]);
   const [joinSchools, setJoinSchools] = useState<JoinSchoolItem[]>([]);
@@ -152,6 +154,10 @@ export default function() {
 
   const [isSpan, setIsSpan] = useState(false)
 
+  const handleChangeYear: FilterBarProps['onClick'] = (v) => {
+    setYear(v)
+  }
+
   return (
     <View className='index'>
       <Select onSearch={handleSearch} onSelect={handleSelect} />
@@ -165,7 +171,9 @@ export default function() {
                 <JoinSchool list={joinSchools} onFilterListChange={handJoinSchoolsListChange} />
               </>
            }
+
            <FilterTable loading={tableDataLoading} list={visibleSchools}
+             top={<FilterBar onClick={handleChangeYear} />}
              header={
                 isSpan
                   ?<View className='icon-show' onClick={() => setIsSpan(false)}>隐藏更多筛选条件<Icon name='arrow-down' className='icon' /></View>
