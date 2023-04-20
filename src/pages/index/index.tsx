@@ -1,124 +1,179 @@
-import { Search } from '@antmjs/vantui'
-import { View } from '@tarojs/components'
+import { Text, View } from '@tarojs/components'
+import { showToast } from '@tarojs/taro'
+import { Icon } from '@antmjs/vantui'
 import { useEffect, useState } from 'react'
+import { useDebounceFn } from 'taro-hooks'
 import { QuerySystem } from '../../components/QuerySystem'
 import { Remind } from '../../components/Remind'
-import { FilterList, FilterListProps, } from '../../views/FilterList'
-import { FilterTable, FilterTableProps, SchoolItem } from '../../views/FilterTable'
+import { FilterList, FilterListProps } from '../../views/FilterList'
+import { FilterTable, SchoolItem } from '../../views/FilterTable'
 import './index.scss'
+import { SchoolInstitutionItem, SchoolInstitution, SchoolInstitutionProps } from '../../views/SchoolInstitution'
+import { getAllSpecInfoList, getSpecList, getSpecNameList } from '../../api'
+import { JoinSchool, JoinSchoolItem, JoinSchoolProps } from '../../views/JoinSchool'
+import { Select, SelectProps } from '../../components/Select'
 
-const school: SchoolItem = {
-  no: '1231',
-  major: '测试',
-  enrollmentUniversitie: '',
-  educationalInstitution: '',
-  lianpeiSchool: '测试',
-  enrollmentPlan: '测试',
-  normalPlan: '测试',
-  povertyAlleviationFamiliy: '测试',
-  awardStudent: '测试',
-  futureCraftsman: '测试',
-  retiredSoldiers: '测试',
-  exam300: '测试',
-  exam150: '测试',
-  tuition: '测试',
-  provincialControlLine: '测试',
-  admissionScoreLineForOrdinaryCandidate: '测试',
-  admissionScorePovertyAlleviationFamilies: '测试',
-  admissionScoreLineAwardStudents: '测试',
-  provincialControlLineBranchOrdinaryCandidate: '测试',
-  vacancyPlanRegularCandidate: '测试',
-  vacancyPlanPovertyAlleviationFamiliy: '测试',
-  vacancyProgramAwardStudents: '测试',
-};
+type GetSpecialtyList = (query: string) => Promise<FilterListProps['list']>
 
-type GetSpecialtyList = (query: string) => FilterListProps['list']
+const getSpecialtyList: GetSpecialtyList = async (query) => {
+  const { data = [] } = await getSpecList(query);
 
-const getSpecialtyList: GetSpecialtyList = (query) => {
-  return [{
-    category: `(05)理工类${query}`,
-    specialtys: [
-      {
-        name: '计算机科学与技术1',
-        no: '1231'
-      },
-      {
-        name: '软件工程',
-        no: '1232'
-      },
-      {
-        name: '通信工程',
-        no: '1234'
-      },
-      {
-        name: '大数据',
-        no: '1235'
-      }
-    ]
-  },
-    {
-      category: `(06)理工类${query}`,
-      specialtys: [
-        {
-          name: '计算机科学与技术1',
-          no: '1236'
-        },
-        {
-          name: '计算机科学与技术2',
-          no: '1237'
-        },
-        {
-          name: '计算机科学与技术3',
-          no: '1238'
-        },
-        {
-          name: '计算机科学与技术4',
-          no: '1239'
-        }
-      ]
-    }
-  ]
+  return data.map(({ title, arr }) => ({
+    category: title,
+    // TODO: 硬编码去除/r
+    specialtys: arr.map(item2 => ({ name: item2.replace(/\r/, ''), activated: true }))
+  }))
 }
 
-type GetSchools = (query: string, list?: FilterListProps['list']) => FilterTableProps['list']
+type FilterSchool = (schools: SchoolItem[], specialtyList: FilterListProps['list'], schoolInstitutions: SchoolInstitutionItem[], joinSchools: JoinSchoolItem[]) => SchoolItem[]
 
-const getSchools: GetSchools = (query, list) => {
-  const specStr = list?.reduce((pre, item) => pre + item.specialtys.filter(spec => spec.activated).map(v => v.name).join('_'), '')
-  const data: FilterTableProps['list'] = new Array(10).fill(school).map((item, index) => ({...item, no: index, major: `测试${query}${specStr}`}))
-  return data;
+const filterSame = (list) => {
+  const result: any[] = [];
+  list.forEach(item => {
+    if(result.find(v => v.name === item.name))  return;
+    result.push(item)
+  });
+    return result;
+}
+
+const filterSchool: FilterSchool = (schools, specialtyList, schoolInstitutions, joinSchools) => {
+
+  const activeSet1 = new Set(specialtyList.reduce(((pre, item1) => [...pre, ...item1.specialtys.filter(item2 => item2.activated).map(({name}) => name)]), []));
+  const activeSet2 = new Set(schoolInstitutions.filter(item => item.activated).map(({name}) => name));
+  const activeSet3 = new Set(joinSchools.filter(item => item.activated).map(({name}) => name));
+
+  const result = [...schools
+    .filter(school => activeSet1.has(school.learn))
+    .filter(school => activeSet2.has(school.schoolType))
+    .filter(school => activeSet3.has(school.schoolName))
+  ]
+
+  return result
 }
 
 export default function() {
   const [searchValue, setSearchValue] = useState('');
+
+  const [schools, setSchools] = useState<SchoolItem[]>([])
+  const [visibleSchools, setVisibleSchools] = useState<SchoolItem[]>([])
+
   const [specialtyList, setSpecialtyList] = useState<FilterListProps['list']>([]);
-  const [schools, setSchools] = useState<FilterTableProps['list']>([])
+
+  const [tableDataLoading, setTableDataLoading] = useState(false)
 
   useEffect(() => {
     if(!searchValue)  {
       setSpecialtyList([]);
       setSchools([]);
+      setVisibleSchools([]);
       return;
     }
 
-    setSpecialtyList(getSpecialtyList(searchValue))
+    (async () => {
+      const data = await getSpecialtyList(searchValue) || []
+      setSpecialtyList(data);
+      try {
+        setTableDataLoading(true)
+        const {data: newSchools = []} = await getAllSpecInfoList(22, searchValue);
+        setSchools(newSchools)
+        setVisibleSchools(newSchools)
+      }catch(e) {
+        showToast({
+          title: e.message,
+          icon: 'error'
+        })
+      }
+       finally {
+        setTableDataLoading(false)
+      }
+    })()
+
   }, [searchValue])
 
+  const [schoolInstitutions, setSchoolInstitutions] = useState<SchoolInstitutionItem[]>([]);
+  const [joinSchools, setJoinSchools] = useState<JoinSchoolItem[]>([]);
+
+  useEffect(() => {
+    const newList = visibleSchools.map(school => ({
+      name: school.schoolType,
+      activated: true,
+    }));
+    setSchoolInstitutions(filterSame(newList))
+  }, [visibleSchools])
+
+  useEffect(() => {
+    const newList = visibleSchools.map(school => ({
+      name: school.schoolName,
+      activated: true,
+    }))
+    setJoinSchools(filterSame(newList))
+  }, [visibleSchools])
+
   const handFilterListChange: FilterListProps['onFilterListChange'] = (list) => {
-    setSchools(getSchools(searchValue, list))
+    const newSchools = filterSchool(schools, list, schoolInstitutions, joinSchools)
+    setSpecialtyList(list)
+    setVisibleSchools(newSchools)
   }
+
+  const handSchoolInstitutionListChange: SchoolInstitutionProps['onFilterListChange'] = (list) => {
+    const newSchools = filterSchool(schools, specialtyList, list, joinSchools)
+    setSchoolInstitutions(list)
+    setVisibleSchools(newSchools)
+  }
+
+  const handJoinSchoolsListChange: JoinSchoolProps['onFilterListChange'] = (list) => {
+    const newSchools = filterSchool(schools, specialtyList, schoolInstitutions, list)
+    setJoinSchools(list)
+    setVisibleSchools(newSchools)
+  }
+
+  // 有问题
+  // const {run: getSpecNameListDebounce} = useDebounceFn(getSpecNameList);
+
+  const handleSearch: SelectProps['onSearch'] = async (v) => {
+    if(!v)  {
+      setSearchValue('');
+      return [];
+    }
+    try {
+      const {data = []} = (await getSpecNameList(v)) || {};
+      return data;
+    }
+    catch(e) {
+      showToast({
+        title: e.message,
+        icon: 'error'
+      })
+    }
+    return []
+  }
+
+  const handleSelect: SelectProps['onSelect'] = (v) => {
+    setSearchValue(v)
+  }
+
+  const [isSpan, setIsSpan] = useState(false)
 
   return (
     <View className='index'>
-      <Search
-        className='search'
-        placeholder='请输入专业名称' inputAlign='center' onChange={(e) => {
-        setSearchValue((e.target as any)?.value || '')
-      }}
-      />
+      <Select onSearch={handleSearch} onSelect={handleSelect} />
       {
         searchValue ? <>
            <FilterList list={specialtyList} onFilterListChange={handFilterListChange} />
-           <FilterTable list={schools} />
+           {
+            isSpan &&
+              <>
+                <SchoolInstitution defaultAllSelect list={schoolInstitutions} onFilterListChange={handSchoolInstitutionListChange} />
+                <JoinSchool list={joinSchools} onFilterListChange={handJoinSchoolsListChange} />
+              </>
+           }
+           <FilterTable loading={tableDataLoading} list={visibleSchools}
+             header={
+                isSpan
+                  ?<View className='icon-show' onClick={() => setIsSpan(false)}>隐藏更多筛选条件<Icon name='arrow-down' className='icon' /></View>
+                 : <View className='icon-show' onClick={() => setIsSpan(true)}>显示更多筛选条件<Icon name='arrow-up' className='icon' /></View>
+            }
+           />
         </> : <View className='info'>
           <Remind />
           <QuerySystem />
