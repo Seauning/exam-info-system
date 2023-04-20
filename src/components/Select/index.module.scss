@@ -1,8 +1,9 @@
 .select {
   position: relative;
+  margin: 20px 0;
   :global {
     .search {
-      margin: 20px;
+      margin: 0 20px;
       border-radius: 50px;
       border: 1px solid rgb(72, 3, 119);
     }
