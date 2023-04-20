@@ -19,8 +19,7 @@ const getSpecialtyList: GetSpecialtyList = async (query) => {
 
   return data.map(({ title, arr }) => ({
     category: title,
-    // TODO: 硬编码去除/r
-    specialtys: arr.map(item2 => ({ name: item2.replace(/\r/, ''), activated: true }))
+    specialtys: arr.map(item2 => ({ name: item2, activated: true }))
   }))
 }
 
@@ -93,20 +92,20 @@ export default function() {
   const [joinSchools, setJoinSchools] = useState<JoinSchoolItem[]>([]);
 
   useEffect(() => {
-    const newList = visibleSchools.map(school => ({
+    const newList = schools.map(school => ({
       name: school.schoolType,
       activated: true,
     }));
     setSchoolInstitutions(filterSame(newList))
-  }, [visibleSchools])
+  }, [schools])
 
   useEffect(() => {
-    const newList = visibleSchools.map(school => ({
+    const newList = schools.map(school => ({
       name: school.schoolName,
       activated: true,
     }))
     setJoinSchools(filterSame(newList))
-  }, [visibleSchools])
+  }, [schools])
 
   const handFilterListChange: FilterListProps['onFilterListChange'] = (list) => {
     const newSchools = filterSchool(schools, list, schoolInstitutions, joinSchools)
