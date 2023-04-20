@@ -1,6 +1,5 @@
 import { Divider, Icon } from "@antmjs/vantui";
 import { Text, View } from "@tarojs/components"
-import { useEffect, useState } from "react";
 import { Title } from "../../components/Title";
 import { FilterItem } from "./FilterItem";
 
@@ -8,39 +7,21 @@ import css from './index.module.scss'
 
 export type Specialty = {
   name: string;
-  activated?: boolean;
+  activated: boolean;
 }
 
 export type FilterListProps = {
-  defaultAllSelect?: boolean;
   list: {category: string; specialtys: Specialty[];}[];
   onFilterListChange?: (list: FilterListProps['list']) => void;
 }
 
 export const FilterList = ({
-  defaultAllSelect = false,
   list, onFilterListChange }: FilterListProps) => {
 
-  const [specialtyList, setSpecialtyList] = useState<FilterListProps['list']>([]);
-
-  useEffect(() => {
-    const newList = list.map(item => {
-      return {
-        ...item,
-        specialtys: item.specialtys.map(specialty => {
-          return {
-            ...specialty,
-            activated: defaultAllSelect
-          }
-        })
-      }
-    })
-    setSpecialtyList(newList);
-  }, [list])
 
   const handleActivatedChange = (name: string, activated: boolean) => {
-    for(let i = 0; i < specialtyList.length; i++) {
-      const item = specialtyList[i];
+    for(let i = 0; i < list.length; i++) {
+      const item = list[i];
       for(let item2 of item.specialtys) {
         if(item2.name === name) {
           item2.activated = activated;
@@ -49,31 +30,29 @@ export const FilterList = ({
       }
     }
 
-    onFilterListChange?.(specialtyList);
-    setSpecialtyList([...specialtyList]);
+    onFilterListChange?.(list);
   }
 
   const handleSelectAll = (category: string, activated: boolean) => {
-    for(let i = 0; i < specialtyList.length; i++) {
-      const item = specialtyList[i];
+    for(let i = 0; i < list.length; i++) {
+      const item = list[i];
       if(item.category === category) {
         item.specialtys.forEach(spec => spec.activated = activated);
         break;
       }
     }
 
-    onFilterListChange?.(specialtyList);
-    setSpecialtyList([...specialtyList]);
+    onFilterListChange?.(list);
   }
 
-  if(!specialtyList?.length)  return <></>
+  if(!list?.length)  return <></>
 
   return <View className={css.filter_list}>
     <Title name='可报考的本科专业' />
     <View className='comment'>点击专业卡查看院校招生计划</View>
     <View>
       {
-        specialtyList.map(({specialtys, category}) => {
+        list.map(({specialtys, category}) => {
           const isAllSelected = specialtys.every(spec => spec.activated);
           return <View key={category}>
             <View className='category'>
@@ -99,7 +78,7 @@ export const FilterList = ({
             <Divider />
             <View className='specialtys'>
               {
-                specialtys.map(({ name, activated = false }) => {
+                specialtys.map(({ name, activated }) => {
                   return <FilterItem
                     className='specialty'
                     activated={activated}

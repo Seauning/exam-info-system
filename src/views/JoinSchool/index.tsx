@@ -7,51 +7,35 @@ import css from '../FilterList/index.module.scss'
 
 export type JoinSchoolItem = {
   name: string;
-  activated?: boolean;
+  activated: boolean;
 }
 
 export type JoinSchoolProps = {
-  defaultAllSelect?: boolean;
   list: JoinSchoolItem[];
   onFilterListChange?: (list: JoinSchoolProps['list']) => void;
 }
 
 export const JoinSchool = ({
-  defaultAllSelect = false,
   list, onFilterListChange }: JoinSchoolProps) => {
 
-
-  const [joinSchoolList, setJoinSchoolList] = useState<JoinSchoolProps['list']>([]);
-
-  useEffect(() => {
-    const newList = list.map(item => {
-      return {
-        ...item,
-        activated: defaultAllSelect
-      }
-    })
-    setJoinSchoolList(newList);
-  }, [list])
-
   const handleActivatedChange = (name: string, activated: boolean) => {
-    for(let i = 0; i < joinSchoolList.length; i++) {
-      const item = joinSchoolList[i];
+    for(let i = 0; i < list.length; i++) {
+      const item = list[i];
       if(item.name === name) {
         item.activated = activated;
       }
     }
 
-    onFilterListChange?.(joinSchoolList);
-    setJoinSchoolList([...joinSchoolList]);
+    onFilterListChange?.(list);
   }
 
-  if(!joinSchoolList?.length)  return <></>
+  if(!list?.length)  return <></>
 
   return <View className={css.filter_list}>
     <Title name='报考院校' />
     <View className='specialtys'>
       {
-        joinSchoolList.map(({ name, activated = false }) => {
+        list.map(({ name, activated }) => {
           return <FilterItem
             className='specialty'
             activated={activated}
