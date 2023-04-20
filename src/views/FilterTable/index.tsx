@@ -1,5 +1,6 @@
 import { Table } from '@antmjs/vantui'
-import { View } from '@tarojs/components';
+import { Text, View } from '@tarojs/components';
+import { ReactNode } from 'react';
 import { Title } from '../../components/Title';
 import css from './index.module.scss'
 import { useColumns } from './useColumns'
@@ -81,11 +82,13 @@ export interface SchoolItem {
 export type FilterTableProps = {
   list: SchoolItem[];
   loading?: boolean;
+  header?: ReactNode;
 }
 
 export const FilterTable = ({
   list,
-  loading
+  loading,
+  header
 }: FilterTableProps) => {
 
   const columns = useColumns();
@@ -94,7 +97,7 @@ export const FilterTable = ({
 
   return <View className={css.filter_table}>
     <Title name='院校招生计划' />
-    <View className='comment'>左右滑动表格查看全部信息</View>
+    <View className='comment'>左右滑动表格查看全部信息<Text>{header}</Text></View>
     <Table
       loading={loading}
       className={css.table}
