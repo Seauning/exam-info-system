@@ -15,7 +15,6 @@ export const Select = ({
   const [searchValue, setSearchValue] = useState('');
   const [list, setList] = useState<string[]>([]);
   const [selectedValue, setSelectedValue] = useState('')
-  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if(!searchValue)  {
@@ -24,15 +23,9 @@ export const Select = ({
     }
 
     (async () => {
-      try {
-        setLoading(true);
         const data = await onSearch(searchValue);
         setList(data);
-      } finally {
-        setLoading(false)
-      }
     })()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchValue])
 
   return <View className={css.select}>
@@ -44,9 +37,8 @@ export const Select = ({
         setSelectedValue('')
       }}
     />
-      <View className='search-content'>
+      {(Boolean(list.length)) && <View className='search-content'>
         {
-          loading ? <Loading className='loading' color='#1989fa' />:
           list?.map(item => {
            return <View
              className='item'
@@ -59,6 +51,6 @@ export const Select = ({
            > {item}</View>
           })
         }
-      </View>
+      </View>}
   </View>
 }
