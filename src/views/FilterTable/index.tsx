@@ -79,11 +79,13 @@ export interface SchoolItem {
 }
 
 export type FilterTableProps = {
-  list: SchoolItem[]
+  list: SchoolItem[];
+  loading?: boolean;
 }
 
 export const FilterTable = ({
-  list
+  list,
+  loading
 }: FilterTableProps) => {
 
   const columns = useColumns();
@@ -94,6 +96,7 @@ export const FilterTable = ({
     <Title name='院校招生计划' />
     <View className='comment'>左右滑动表格查看全部信息</View>
     <Table
+      loading={loading}
       className={css.table}
       columns={columns}
       dataSource={list}
