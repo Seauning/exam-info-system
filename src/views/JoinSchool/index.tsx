@@ -28,10 +28,23 @@ export const JoinSchool = ({
     onFilterListChange?.(list);
   }
 
+  const handleClear = () => {
+    for(let i = 0; i < list.length; i++) {
+      const item = list[i];
+        item.activated = false;
+    }
+
+    onFilterListChange?.(list);
+  }
+
   if(!list?.length)  return <></>
 
   return <View className={css.filter_list}>
-    <Title name='报考院校' />
+    <Title name='报考院校' header={<View style={({
+      color: 'rgb(72, 3, 119)'
+    })} onClick={handleClear}
+    >清除</View>}
+    />
     <View className='specialtys'>
       {
         list.map(({ name, activated }) => {
