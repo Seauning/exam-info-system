@@ -1,5 +1,5 @@
 import { Table } from '@antmjs/vantui'
-import { Text, View } from '@tarojs/components';
+import { View } from '@tarojs/components';
 import { ReactNode } from 'react';
 import { Title } from '../../components/Title';
 import css from './index.module.scss'

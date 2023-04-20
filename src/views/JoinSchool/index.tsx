@@ -1,5 +1,4 @@
 import { View } from "@tarojs/components"
-import { useEffect, useState } from "react";
 import { Title } from "../../components/Title";
 import { FilterItem } from "../FilterList/FilterItem";
 

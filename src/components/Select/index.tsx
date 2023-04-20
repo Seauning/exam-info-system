@@ -1,4 +1,4 @@
-import { Loading, Search } from "@antmjs/vantui"
+import { Search } from "@antmjs/vantui"
 import { View } from "@tarojs/components"
 import { useEffect, useState } from "react";
 import css from './index.module.scss'
