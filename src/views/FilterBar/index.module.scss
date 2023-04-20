@@ -1,0 +1,23 @@
+.filter_bar {
+  display: flex;
+  height: 30px;
+  border-radius: 10px;
+  background-color: #eee;
+  :global {
+    .year {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #000;
+      font-size: 16px;
+      transition: all linear 0.3s;
+      &.active {
+        background-color: rgb(72, 3, 119);
+         border-radius: 10px;
+         color: #fff;
+         font-weight: 600;
+      }
+    }
+  }
+}

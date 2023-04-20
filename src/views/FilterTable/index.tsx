@@ -83,12 +83,14 @@ export type FilterTableProps = {
   list: SchoolItem[];
   loading?: boolean;
   header?: ReactNode;
+  top?: ReactNode;
 }
 
 export const FilterTable = ({
   list,
   loading,
-  header
+  header,
+  top
 }: FilterTableProps) => {
 
   const columns = useColumns();
@@ -98,6 +100,7 @@ export const FilterTable = ({
   return <View className={css.filter_table}>
     <Title name='院校招生计划' />
     <View className='comment'>左右滑动表格查看全部信息<View>{header}</View></View>
+    {top}
     <Table
       loading={loading}
       className={css.table}
