@@ -7,7 +7,7 @@ export type FilterBarProps = {
   onClick?: (year: number) => void;
 }
 
-export const YEARS = [2022, 2023];
+export const YEARS = [22, 23];
 
 export const FilterBar = ({
   onClick
@@ -33,7 +33,7 @@ export const FilterBar = ({
               setCurYear(year)
               onClick?.(year)
             }}
-          >{year}年</View>
+          >20{year}年</View>
         )
       })
     }

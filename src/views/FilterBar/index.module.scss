@@ -1,6 +1,8 @@
 .filter_bar {
   display: flex;
-  height: 30px;
+  margin: 5px 0;
+  padding: 0 5px;
+  height: 40px;
   border-radius: 10px;
   background-color: #eee;
   :global {
