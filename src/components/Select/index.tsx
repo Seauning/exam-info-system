@@ -18,7 +18,10 @@ export const Select = ({
 
   useEffect(() => {
     if(!searchValue)  {
-      onSearch('')
+      (async () => {
+        const data = await onSearch(searchValue);
+        setList(data);
+      })()
       return;
     }
 
