@@ -97,7 +97,7 @@ export const FilterTable = ({
 
   return <View className={css.filter_table}>
     <Title name='院校招生计划' />
-    <View className='comment'>左右滑动表格查看全部信息<Text>{header}</Text></View>
+    <View className='comment'>左右滑动表格查看全部信息<View>{header}</View></View>
     <Table
       loading={loading}
       className={css.table}
