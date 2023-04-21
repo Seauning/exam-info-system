@@ -3,6 +3,6 @@
   "projectname": "exam-info-query",
   "setting": {
     "compileHotReLoad": true,
-    "urlCheck": false
+    "urlCheck": true
   }
 }
