@@ -95,8 +95,6 @@ export const FilterTable = ({
 
   const columns = useColumns();
 
-  if(!list?.length) return<></>
-
   return <View className={css.filter_table}>
     <Title name='院校招生计划' />
     <View className='comment'>左右滑动表格查看全部信息<View>{header}</View></View>
