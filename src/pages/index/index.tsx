@@ -79,7 +79,7 @@ export default function() {
         setVisibleSchools(newSchools)
       }catch(e) {
         showToast({
-          title: e.message,
+          title: e?.message || '数据加载失败',
           icon: 'error'
         })
       }

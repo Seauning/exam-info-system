@@ -1,7 +1,7 @@
 import { request } from "@tarojs/taro";
 import { SchoolItem } from './../views/FilterTable/index';
 
-const a = 'http://101.200.222.26:7990';
+const a = 'https://lovelrn99.xyz';
 
 export const getSpecNameList = (query: string) => {
   return request<string[]>({
