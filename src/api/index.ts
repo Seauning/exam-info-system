@@ -1,7 +1,7 @@
 import { request } from "@tarojs/taro";
 import { SchoolItem } from './../views/FilterTable/index';
 
-const a = 'https://lovelrn99.xyz';
+const a = 'https://lovelrn99.xyz:7990';
 
 export const getSpecNameList = (query: string) => {
   return request<string[]>({
