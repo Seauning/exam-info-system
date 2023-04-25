@@ -4,7 +4,7 @@ import { SchoolItem } from './../views/FilterTable/index';
 const a = 'https://lovelrn99.xyz:7990';
 
 export const getSpecNameList = (query: string) => {
-  return request<string[]>({
+  return request<{learn: string; code: string}[]>({
     method: 'GET',
     url: `${a}/info/query-zk-list/${query}`,
   })

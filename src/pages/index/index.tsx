@@ -136,7 +136,7 @@ export default function() {
       return [];
     }
     try {
-      const {data = []} = (await getSpecNameList(v)) || {};
+      const {data = []} = (await getSpecNameList(v));
       return data;
     }
     catch(e) {

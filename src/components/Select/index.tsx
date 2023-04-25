@@ -5,7 +5,7 @@ import css from './index.module.scss'
 
 export type SelectProps = {
   onSelect: (value: any) => void;
-  onSearch: (value: string) => Promise<string[]>;
+  onSearch: (value: string) => Promise<{learn: string; code: string}[]>;
 }
 
 export const Select = ({
@@ -13,7 +13,7 @@ export const Select = ({
   onSearch
 }: SelectProps) => {
   const [searchValue, setSearchValue] = useState('');
-  const [list, setList] = useState<string[]>([]);
+  const [list, setList] = useState<{learn: string; code: string}[]>([]);
   const [selectedValue, setSelectedValue] = useState('')
 
   useEffect(() => {
@@ -45,13 +45,13 @@ export const Select = ({
           list?.map(item => {
            return <View
              className='item'
-             key={item}
+             key={item.code}
              onClick={() => {
-              onSelect(item);
-              setSelectedValue(item)
+              onSelect(item.learn);
+              setSelectedValue(item.learn)
               setList([])
             }}
-           > {item}</View>
+           >{`${item.learn} (${item.code})`}</View>
           })
         }
       </View>}
